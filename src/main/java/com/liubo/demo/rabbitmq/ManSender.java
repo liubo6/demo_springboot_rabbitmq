@@ -56,19 +56,17 @@ public class ManSender {
     }
 
 
-    public void sendMessage(Serializable object) throws Exception {
+    public void sendMessage(String object) throws Exception {
         // 发布消息，第一个参数表示路由（Exchange名称），未""则表示使用默认消息路由
         channel.basicPublish(AmqpConfig.EXCHANGE, AmqpConfig.ROUTINGKEY, null,
-                SerializationUtils.serialize(object));
+                object.getBytes());
 
     }
 
     public static void main(String[] args) throws Exception {
         ManSender manSender = new ManSender("spring-boot-queue");
-        People people =new People();
-        people.setName("liubo");
-        people.setAddress("hangzhou");
-        manSender.sendMessage(people);
+
+        manSender.sendMessage("msg come on ");
 
         new ManSender("spring-boot-queue").close();
     }
@@ -93,5 +91,13 @@ class  People implements  Serializable{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return "People{" +
+                "name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                '}';
     }
 }
