@@ -1,2 +1,2 @@
-# demo_springbbot_rabbitmq
+# demo_springboot_rabbitmq
 springboot rabbitmq
