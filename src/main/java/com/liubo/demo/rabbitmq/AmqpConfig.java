@@ -1,11 +1,9 @@
 package com.liubo.demo.rabbitmq;
 
 
-import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,7 +16,7 @@ import org.springframework.context.annotation.Scope;
 public class AmqpConfig {
     public static final String EXCHANGE = "spring-boot-exchange";
     public static final String ROUTINGKEY = "spring-boot-routingKey";
-    public static final String QUEUE_NAME = "spring-boot-routingKey";
+    public static final String QUEUE_NAME = "spring-boot-queue";
 
     //RabbitMQ的配置信息
     @Value("${spring.rabbitmq.host}")
@@ -79,11 +77,6 @@ public class AmqpConfig {
 
     }
 
-    // 在spring容器中添加一个监听类
-    @Bean
-    Receiver receiver() {
-        return new Receiver();
-    }
 
     /**
      * 绑定

@@ -3,6 +3,8 @@ import com.liubo.demo.rabbitmq.AmqpConfig;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageProperties;
 
 
 /**
@@ -19,7 +21,7 @@ public class ManSender {
     private final static String password = "guest";
     private final static String virtualHost = "/";
     private final static int port = 5672;
-    private final static String host = "121.43.226.133";
+    private final static String host = "127.0.0.1";
 
     public ManSender(String queueName) throws Exception {
         this.queueName = queueName;
@@ -53,18 +55,20 @@ public class ManSender {
     }
 
 
-    public void sendMessage(String object) throws Exception {
+    public void sendMessage(Message object) throws Exception {
         // 发布消息，第一个参数表示路由（Exchange名称），未""则表示使用默认消息路由
         channel.basicPublish(AmqpConfig.EXCHANGE, AmqpConfig.ROUTINGKEY, null,
-                object.getBytes());
+                object.getBody());
 
     }
 
     public static void main(String[] args) throws Exception {
         ManSender manSender = new ManSender("spring-boot-queue");
-
+        String str = "hello,this is a message";
+        byte[] bytes = str.getBytes();
+        Message message = new Message(bytes, new MessageProperties());
         for (int i = 0; i < 10; i++) {
-            manSender.sendMessage("msg come on " + i);
+            manSender.sendMessage(message);
         }
         manSender.close();
     }
