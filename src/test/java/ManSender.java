@@ -1,12 +1,9 @@
-package com.liubo.demo.rabbitmq;
 
+import com.liubo.demo.rabbitmq.AmqpConfig;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
-import com.rabbitmq.client.Channel;
-import org.springframework.amqp.utils.SerializationUtils;
 
-import java.io.Serializable;
 
 /**
  * Created by Administrator on 2016/5/12.
@@ -22,7 +19,7 @@ public class ManSender {
     private final static String password = "guest";
     private final static String virtualHost = "/";
     private final static int port = 5672;
-    private final static String host = "127.0.0.1";
+    private final static String host = "121.43.226.133";
 
     public ManSender(String queueName) throws Exception {
         this.queueName = queueName;
@@ -66,38 +63,11 @@ public class ManSender {
     public static void main(String[] args) throws Exception {
         ManSender manSender = new ManSender("spring-boot-queue");
 
-        manSender.sendMessage("msg come on ");
-
-        new ManSender("spring-boot-queue").close();
+        for (int i = 0; i < 10; i++) {
+            manSender.sendMessage("msg come on " + i);
+        }
+        manSender.close();
     }
 
 
-}
-class  People implements  Serializable{
-    private String name;
-    private String address;
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public String toString() {
-        return "People{" +
-                "name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                '}';
-    }
 }
