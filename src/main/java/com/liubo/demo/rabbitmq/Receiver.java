@@ -9,6 +9,7 @@ import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 监听的业务类，实现接口MessageListener
@@ -23,6 +24,8 @@ public class Receiver implements ChannelAwareMessageListener {
     public void onMessage(Message message, Channel channel) throws Exception {
 
         try {
+            //模拟耗时操作
+            TimeUnit.SECONDS.sleep(5);
             logger.info("##### = {}", new String(message.getBody()));
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);//手动消息应答
         } catch (IOException e) {
