@@ -7,6 +7,7 @@ import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFacto
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
@@ -104,12 +105,28 @@ public class AmqpConfig {
      *
      * @return
      */
-    @Bean(name="rabbitListenerContainer")
-    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory() {
-        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
-        factory.setMessageConverter(jsonMessageConverter());
-        factory.setConnectionFactory(connectionFactory());
-        factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);//设置消费者手动应答
-        return factory;
+//    @Bean(name="rabbitListenerContainer")
+//    public SimpleRabbitListenerContainerFactory rabbitListenerContainerFactory() {
+//        SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
+//        factory.setMessageConverter(jsonMessageConverter());
+//        factory.setConnectionFactory(connectionFactory());
+//        factory.setAcknowledgeMode(AcknowledgeMode.MANUAL);//设置消费者手动应答
+//        factory.setPrefetchCount(1);//从代理接收消息的数目。这个值越大，发送消息就越快，但是导致非顺序处理的风险就越高
+//
+//        return factory;
+//    }
+
+    @Bean
+    public SimpleMessageListenerContainer messageListenerContainer() {
+        SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
+        container.setConnectionFactory(connectionFactory());
+        container.setQueueNames(AmqpConfig.QUEUE_NAME);
+        container.setExposeListenerChannel(true);
+        container.setMaxConcurrentConsumers(1);
+        container.setConcurrentConsumers(1);
+        container.setAcknowledgeMode(AcknowledgeMode.MANUAL); //设置确认模式手工确认
+        container.setMessageListener(new Receiver());
+        return container;
     }
+
 }

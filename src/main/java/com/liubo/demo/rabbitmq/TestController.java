@@ -1,5 +1,7 @@
 package com.liubo.demo.rabbitmq;
 
+import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,8 +19,8 @@ public class TestController {
 
     @RequestMapping(value = "/send", method = RequestMethod.GET)
     public String testSend() {
-
-        rabbitTemplate.convertAndSend(AmqpConfig.EXCHANGE, AmqpConfig.ROUTINGKEY, new PersonDO("1", "10086", "liubo", 20));
+        Message message = MessageBuilder.withBody(new PersonDO("1", "10086", "liubo", 20).toString().getBytes()).setMessageId("123").build();
+        rabbitTemplate.convertAndSend(AmqpConfig.EXCHANGE, AmqpConfig.ROUTINGKEY, message);
         return "ok";
     }
 }
