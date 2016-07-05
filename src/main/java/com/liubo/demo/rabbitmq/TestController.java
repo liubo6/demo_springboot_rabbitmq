@@ -1,5 +1,6 @@
 package com.liubo.demo.rabbitmq;
 
+import com.liubo.demo.rabbitmq.person.model.PersonDO;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageBuilder;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;

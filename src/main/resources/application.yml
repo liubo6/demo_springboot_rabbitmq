@@ -23,3 +23,6 @@ server:
       suffix: .log
         # 使用druid数据源
 #########################--mysql end--########################
+mybatis:
+  mapperLocations: classpath:mapper/*.xml
+  typeAliasesPackage: com.liubo.demo.*.model
