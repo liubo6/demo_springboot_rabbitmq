@@ -38,5 +38,4 @@ public class PersonController {
         return personService.getPerson(id);
     }
 
-
 }

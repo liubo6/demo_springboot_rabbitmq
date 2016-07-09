@@ -4,7 +4,6 @@ import com.liubo.demo.rabbitmq.person.model.PersonDO;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-
 @Component
 public interface PersonDao {
 

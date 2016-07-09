@@ -5,6 +5,20 @@ spring:
         url: jdbc:mysql://127.0.0.1:3306/test
         username: root
         password: 123456
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        maxActive: 20
+        initialSize: 5
+        maxWait: 60000
+        minIdle: 5
+        timeBetweenEvictionRunsMillis: 60000
+        minEvictableIdleTimeMillis: 300000
+        validationQuery: select 'x'
+        testWhileIdle: true
+        testOnBorrow: false
+        testOnReturn: false
+        poolPreparedStatements: true
+        maxOpenPreparedStatements: 20
     rabbitmq:
       host: 127.0.0.1
       port: 5672
@@ -14,7 +28,7 @@ spring:
       listener:
         auto-startup: true
 server:
-  port: 8080
+  port: 8088
   display-name: "liubo-loan"
   tomcat:
     accesslog:
@@ -25,4 +39,4 @@ server:
 #########################--mysql end--########################
 mybatis:
   mapperLocations: classpath:mapper/*.xml
-  typeAliasesPackage: com.liubo.demo.*.model
+  typeAliasesPackage: com.liubo.demo

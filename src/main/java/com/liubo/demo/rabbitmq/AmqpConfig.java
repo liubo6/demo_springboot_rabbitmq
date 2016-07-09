@@ -117,7 +117,12 @@ public class AmqpConfig {
 //    }
 
     @Bean
-    public SimpleMessageListenerContainer messageListenerContainer() {
+    Receiver receiver(){
+        return new Receiver();
+    }
+
+    @Bean
+    public SimpleMessageListenerContainer messageListenerContainer(Receiver receiver) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory());
         container.setQueueNames(AmqpConfig.QUEUE_NAME);
@@ -125,7 +130,7 @@ public class AmqpConfig {
         container.setMaxConcurrentConsumers(1);
         container.setConcurrentConsumers(1);
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL); //设置确认模式手工确认
-        container.setMessageListener(new Receiver());
+        container.setMessageListener(receiver);
         return container;
     }
 
