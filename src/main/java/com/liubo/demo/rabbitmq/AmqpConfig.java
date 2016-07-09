@@ -15,6 +15,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.web.filter.CharacterEncodingFilter;
+
 @EnableRabbit
 @Configuration
 public class AmqpConfig {
@@ -132,6 +134,14 @@ public class AmqpConfig {
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL); //设置确认模式手工确认
         container.setMessageListener(receiver);
         return container;
+    }
+
+    @Bean
+    public CharacterEncodingFilter characterEncodingFilter() {
+        CharacterEncodingFilter filter = new CharacterEncodingFilter();
+        filter.setEncoding("UTF-8");
+        filter.setForceEncoding(true);
+        return filter;
     }
 
 }

@@ -2,10 +2,11 @@
 spring:
     datasource:
         name: test
-        url: jdbc:mysql://127.0.0.1:3306/test
+        url: jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=UTF-8
         username: test
         password: 123456@Liubo
         type: com.alibaba.druid.pool.DruidDataSource
+        sql-script-encoding: utf-8
         driver-class-name: com.mysql.jdbc.Driver
         maxActive: 20
         initialSize: 5
