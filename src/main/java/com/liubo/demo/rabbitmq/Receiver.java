@@ -31,17 +31,16 @@ public class Receiver implements ChannelAwareMessageListener {
     public void onMessage(Message message, Channel channel) throws Exception {
 
         try {
-            //模拟耗时操作
-            TimeUnit.SECONDS.sleep(5);
+
             logger.info("##### = {}", new String(message.getBody()));
 
             ObjectMapper objectMapper = new ObjectMapper();
             PersonDO personDO = objectMapper.readValue(new String(message.getBody()), PersonDO.class);
-
+            //模拟耗时操作
+            //TimeUnit.SECONDS.sleep(10);
             boolean result = personDao.addPerson(personDO) > 0;
             if (!result) {
                 logger.error("消息消费失败");
-//                throw new Exception("消息消费失败");
             } else {
                 logger.info("消息消费成功");
             }
