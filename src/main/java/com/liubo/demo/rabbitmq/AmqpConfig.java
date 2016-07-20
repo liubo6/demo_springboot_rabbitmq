@@ -3,11 +3,11 @@ package com.liubo.demo.rabbitmq;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
-import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
+import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.beans.factory.annotation.Value;
@@ -124,7 +124,12 @@ public class AmqpConfig {
     }
 
     @Bean
-    public SimpleMessageListenerContainer messageListenerContainer(Receiver receiver) {
+    MessageListenerAdapter listenerAdapter(Receiver receiver) {
+        return new MessageListenerAdapter(receiver, "onMessage");
+    }
+
+    @Bean
+    public SimpleMessageListenerContainer messageListenerContainer(MessageListenerAdapter listenerAdapter) {
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
         container.setConnectionFactory(connectionFactory());
         container.setQueueNames(AmqpConfig.QUEUE_NAME);
@@ -132,9 +137,11 @@ public class AmqpConfig {
         container.setMaxConcurrentConsumers(1);
         container.setConcurrentConsumers(1);
         container.setAcknowledgeMode(AcknowledgeMode.MANUAL); //设置确认模式手工确认
-        container.setMessageListener(receiver);
+        container.setMessageListener(listenerAdapter);
         return container;
     }
+
+
 
     @Bean
     public CharacterEncodingFilter characterEncodingFilter() {

@@ -11,7 +11,6 @@ import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 
 /**
@@ -47,7 +46,8 @@ public class Receiver implements ChannelAwareMessageListener {
             channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);//手动消息应答
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-            channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);//true 重新放入队列
+//            channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);//true 重新放入队列
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(),false,true);//对于处理不了的异常消息
         }
     }
 
