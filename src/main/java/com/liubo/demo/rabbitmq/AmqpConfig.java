@@ -20,9 +20,11 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @EnableRabbit
 @Configuration
 public class AmqpConfig {
-    public static final String EXCHANGE = "spring-boot-exchange";
-    public static final String ROUTINGKEY = "spring-boot-routingKey";
-    public static final String QUEUE_NAME = "spring-boot-queue";
+    public static final String EXCHANGE = "spring.boot.direct";
+    public static final String ROUTINGKEY_FAIL = "spring.boot.routingKey.failure";
+    public static final String ROUTINGKEY = "spring.boot.routingKey";
+    public static final String QUEUE_NAME = "spring.demo";
+    public static final String QUEUE_NAME_FAIL = "spring.demo.failure";
 
     //RabbitMQ的配置信息
     @Value("${spring.rabbitmq.host}")
@@ -85,7 +87,11 @@ public class AmqpConfig {
 
     }
 
+    @Bean
+    public Queue queueFail() {
+        return new Queue(QUEUE_NAME_FAIL, true); //队列持久
 
+    }
     /**
      * 绑定
      *
@@ -96,7 +102,10 @@ public class AmqpConfig {
         return BindingBuilder.bind(queue()).to(exchange()).with(AmqpConfig.ROUTINGKEY);
     }
 
-
+    @Bean
+    public Binding bindingFail(Queue queue, DirectExchange exchange) {
+        return BindingBuilder.bind(queueFail()).to(exchange()).with(AmqpConfig.ROUTINGKEY_FAIL);
+    }
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();

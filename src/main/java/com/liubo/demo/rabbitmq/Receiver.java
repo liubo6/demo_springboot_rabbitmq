@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.ChannelAwareMessageListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -25,6 +27,9 @@ public class Receiver implements ChannelAwareMessageListener {
 
     @Resource
     private PersonDao personDao;
+
+    @Autowired
+    private RabbitTemplate template;
 
     @Override
     public void onMessage(Message message, Channel channel) throws Exception {
@@ -47,7 +52,11 @@ public class Receiver implements ChannelAwareMessageListener {
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
 //            channel.basicReject(message.getMessageProperties().getDeliveryTag(), true);//true 重新放入队列
-            channel.basicNack(message.getMessageProperties().getDeliveryTag(),false,true);//对于处理不了的异常消息
+            channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);//对于处理不了的异常消息
+            ObjectMapper objectMapper = new ObjectMapper();
+            PersonDO personDO = objectMapper.readValue(new String(message.getBody()), PersonDO.class);
+            //发送到失败队列
+            template.convertAndSend(AmqpConfig.EXCHANGE, AmqpConfig.ROUTINGKEY_FAIL, personDO);
         }
     }
 
