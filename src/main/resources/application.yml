@@ -2,14 +2,14 @@
 spring:
     datasource:
         name: test
-        url: jdbc:mysql://seaof-153-125-234-174.jp-tokyo-10.arukascloud.io:31719/test?useUnicode=true&characterEncoding=UTF-8
+        url: jdbc:mysql://seaof-153-125-234-174.jp-tokyo-10.arukascloud.io:31719/test?useUnicode=true&characterEncoding=UTF-8&useSSL=false
         username: root
         password: liubo
         #Spring Boot默认的数据源是：org.apache.tomcat.jdbc.pool.DataSource
         type: com.alibaba.druid.pool.DruidDataSource
         sql-script-encoding: utf-8
         driver-class-name: com.mysql.jdbc.Driver
-        maxActive: 20
+        maxActive: 50
         initialSize: 5
         #配置获取连接等待超时的时间
         maxWait: 60000
